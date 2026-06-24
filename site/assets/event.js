@@ -48,7 +48,7 @@ function render(ev){
   return `
     <div class="eyebrow">${esc(ev.institute)}</div>
     <h1>${esc(ev.title)}</h1>
-    <div class="ornament">❦</div>
+    <div class="ornament">◆</div>
     <div class="detail-meta">${meta}</div>
     ${desc}
     <a class="cta" href="${esc(ev.url)}" target="_blank" rel="noopener">Zur Original-Seite &amp; Anmeldung →</a>`;
