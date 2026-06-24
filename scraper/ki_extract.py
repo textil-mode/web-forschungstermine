@@ -30,7 +30,7 @@ KI_TARGETS = [
     {"institute": "FIBRE Bremen", "institute_id": "fibre", "url": "https://www.faserinstitut.de/news/"},
     {"institute": "TITK", "institute_id": "titk", "url": "https://www.titk.de/veranstaltungen/messen/"},
     {"institute": "ITA Augsburg", "institute_id": "ita-augsburg", "url": "https://www.ita-augsburg.com/presse/"},
-    {"institute": "DWI Aachen", "institute_id": "dwi", "url": "https://www.dwi.rwth-aachen.de/go/id/jmkw/"},
+    {"institute": "DWI Aachen", "institute_id": "dwi", "url": "https://www.dwi.rwth-aachen.de/"},
 ]
 
 _PROMPT = """Du extrahierst Veranstaltungstermine eines Forschungsinstituts aus dem folgenden Seitentext.
