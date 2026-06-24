@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forschungstermine — Veranstaltungen der Textilforschungsinstitute</title>
+<meta name="description" content="Konferenzen, Kolloquien, Tagungen und Webinare der deutschen Textilforschungsinstitute — gebündelt an einem Ort.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="site">
+    <div class="eyebrow">Textilforschung · Deutschland</div>
+    <h1>Forschungstermine</h1>
+    <div class="ornament">❦</div>
+    <p class="lede">Konferenzen, Kolloquien, Tagungen und Webinare der Textilforschungsinstitute — gebündelt an einem Ort.</p>
+    <div class="toolbar">
+      <button class="toggle active" id="btn-list" type="button">Liste</button>
+      <button class="toggle" id="btn-cal" type="button">Kalender</button>
+    </div>
+  </header>
+
+  <main>
+    <div id="view-list"></div>
+    <div id="view-cal" class="cal hidden"></div>
+    <div id="empty" class="empty-state hidden">Zurzeit sind keine kommenden Termine gelistet.</div>
+  </main>
+
+  <footer class="site">
+    <span id="updated"></span><br>
+    Eine kuratierte, automatisch aktualisierte Übersicht der Veranstaltungen ausgewählter Textilforschungsinstitute.
+  </footer>
+</div>
+<script src="assets/app.js"></script>
+</body>
+</html>
