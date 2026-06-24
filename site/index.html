@@ -23,10 +23,16 @@
     </div>
   </header>
 
+  <section class="filters" id="filters">
+    <input type="search" id="search" class="search" placeholder="Termine durchsuchen …" autocomplete="off" aria-label="Termine durchsuchen">
+    <div class="chips" id="chips"></div>
+    <div class="result-count" id="resultCount"></div>
+  </section>
+
   <main>
     <div id="view-list"></div>
     <div id="view-cal" class="cal hidden"></div>
-    <div id="empty" class="empty-state hidden">Zurzeit sind keine kommenden Termine gelistet.</div>
+    <div id="empty" class="empty-state hidden">Keine Termine passen zu deiner Auswahl.</div>
   </main>
 
   <footer class="site">

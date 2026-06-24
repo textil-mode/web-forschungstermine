@@ -7,6 +7,7 @@ import sys
 from datetime import date, datetime, timezone
 from pathlib import Path
 
+from scraper.fields import classify, field_defs
 from scraper.model import Event
 
 log = logging.getLogger("forschungstermine.build")
@@ -37,7 +38,12 @@ def build_events(adapters, today: date | None = None) -> list[dict]:
         log.info("Adapter %s: %d Termine", name, len(events))
 
     ordered = sorted(by_id.values(), key=lambda e: e.start)
-    return [e.to_dict() for e in ordered]
+    result = []
+    for e in ordered:
+        d = e.to_dict()
+        d["fields"] = classify(" ".join(filter(None, [d["title"], d.get("description"), d.get("kind")])))
+        result.append(d)
+    return result
 
 
 def _start_date(iso: str) -> date:
@@ -52,6 +58,7 @@ def main() -> int:
     payload = {
         "generated_at": datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds"),
         "count": len(events),
+        "fields": field_defs(),
         "events": events,
     }
     SITE_DATA.parent.mkdir(parents=True, exist_ok=True)
