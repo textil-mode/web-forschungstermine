@@ -8,10 +8,12 @@ und hier eingetragen wird.
 """
 from scraper.adapters.ditf import DitfAdapter
 from scraper.adapters.ita_aachen import ItaAachenAdapter
+from scraper.adapters.stfi import StfiAdapter
 from scraper.adapters.wfk import WfkAdapter
 
 ACTIVE_ADAPTERS = [
     DitfAdapter(),
     ItaAachenAdapter(),
+    StfiAdapter(),
     WfkAdapter(),
 ]

@@ -46,18 +46,22 @@ Es werden **ausschließlich** Institute aus der offiziellen t+m-Liste berücksic
 |---|---|---|
 | DITF Denkendorf | `ditf.de/de/aktuelles/termine` | aktiv |
 | ITA Aachen | `ita.rwth-aachen.de/.../aktuelle-veranstaltungen/?showall=1` | aktiv |
+| STFI Chemnitz | `stfi.de/events` | aktiv |
 | wfk Cleaning Technology Institute | `wfk.de/transfer/seminare-workshops-konferenzen/` | aktiv |
 
 > Hohenstein war zunächst angebunden, steht aber **nicht** auf der t+m-Liste und
 > wurde daher entfernt.
+>
+> **STFI**: Die Detailseiten zeigen nur das Veröffentlichungsdatum, nicht das
+> Eventdatum. Daher wird das Datum aus der „Branchentermine"-Tabelle gezogen und
+> nur für Zeilen übernommen, die zu einer STFI-eigenen Event-Card passen (Titel-
+> Abgleich) — so sind ausschließlich STFI-eigene, korrekt datierte Termine drin.
 
 ### Geprüft, (noch) nicht angebunden
 
-- **STFI Chemnitz** (`stfi.de/events`): hat eigene, verlinkte Termin-Cards, das
-  Datum steht aber nur im Fließtext der Detailseiten → bräuchte Detailseiten-Abruf
-  mit Freitext-Parsing. Vertagt.
 - **TITV Greiz** (`titv-greiz.de/.../alle-termine-auf-einen-blick`): echte eigene
-  Terminliste, liefert aber bei jedem HTTP-GET **500** (Bot-Block). Erneut testen.
+  Terminliste, liefert aber bei jedem HTTP-GET konsistent **500** (auch mit vollen
+  Browser-Headern); übrige TITV-Seiten enthalten die Termine nicht statisch.
 - **ITM Dresden** (TU-CMS): Terminseite hinter Shibboleth-SSO / JS → nicht ohne
   Headless-Browser bzw. Login scrapebar.
 - **DWI Aachen, DTNW, FIBRE, ITA Augsburg, Kiwa TBU, TFI, TITK**: keine eigene,
