@@ -184,6 +184,13 @@
   "timeline": [
     {
       "datum": "2026-06-24",
+      "typ": "deploy",
+      "status": "live",
+      "titel": "Backend live: Knopfdruck-Refresh + Admin-Freigabe + KI (dormant)",
+      "detail": "FastAPI+SQLite als systemd-Dienst (Port 8095) hinter nginx deployt: /api/events oeffentlich, /admin passwortgeschuetzt (Aktualisieren-Button + KI-Freigabe). Frontend liest aus DB. Cron schreibt nun in DB. KI-Extraktion inaktiv, da kein Anthropic-Key auf dem VPS gefunden - .env wartet auf Key. Smoke-Test: API 200, Admin 401, Seite 200."
+    },
+    {
+      "datum": "2026-06-24",
       "typ": "feature",
       "status": "erledigt",
       "titel": "Design: Tex-Started-01-Template",
