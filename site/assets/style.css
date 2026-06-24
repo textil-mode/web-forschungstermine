@@ -6,9 +6,10 @@
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
+html{background:var(--bg2)}
 body{
-  margin:0;background:linear-gradient(165deg,var(--bg1),var(--bg2));
-  background-attachment:fixed;color:var(--cream);min-height:100vh;
+  margin:0;background:linear-gradient(165deg,var(--bg1),var(--bg2)) no-repeat;
+  color:var(--cream);min-height:100vh;
   font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;
   -webkit-font-smoothing:antialiased;
 }
