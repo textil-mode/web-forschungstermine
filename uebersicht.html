@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forschungstermine · Projektübersicht</title>
+<style>
+  :root{
+    --bg:#0b0c0f; --bg2:#121419;
+    --panel:#14161c; --panel2:#1a1d25; --panel3:#20242e;
+    --silver:#c7cad3; --silver-dim:#8b8f9a; --silver-faint:#5f636e;
+    --gold:#d8b25a; --gold-bright:#ecc878; --bronze:#bd8a55; --bronze-deep:#a06a3c;
+    --line:rgba(216,178,90,.16); --line-soft:rgba(199,202,211,.08);
+    --done:#86b073; --open:#d8b25a; --bug:#d07e6e; --deploy:#6ea3c9; --ziel:#b08bd0;
+    --serif:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+    --sans:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:radial-gradient(1200px 800px at 80% -10%,#171a22 0%,var(--bg) 55%) fixed,var(--bg);
+    color:var(--silver); font-family:var(--sans); font-size:15px; line-height:1.6;
+    -webkit-font-smoothing:antialiased; display:flex; min-height:100vh;
+  }
+  a{color:var(--gold);text-decoration:none}
+  a:hover{color:var(--gold-bright);text-decoration:underline}
+  code,pre{font-family:"JetBrains Mono","SF Mono",Consolas,"Liberation Mono",monospace}
+
+  /* ===== Sidebar ===== */
+  .side{
+    width:286px; flex:0 0 286px; position:sticky; top:0; align-self:flex-start;
+    height:100vh; overflow-y:auto; padding:30px 24px;
+    background:linear-gradient(180deg,var(--panel) 0%,#101216 100%);
+    border-right:1px solid var(--line);
+  }
+  .brand{font-family:var(--serif);font-weight:600;font-size:27px;line-height:1.15;
+    color:var(--gold-bright); letter-spacing:.3px; margin:0 0 4px}
+  .brand .sub{display:block;font-family:var(--sans);font-size:11px;font-weight:600;
+    letter-spacing:2.5px;text-transform:uppercase;color:var(--bronze);margin-top:8px}
+  .pill{display:inline-block;margin-top:14px;padding:4px 12px;border-radius:999px;
+    font-size:11.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+    border:1px solid var(--line); color:var(--gold); background:rgba(216,178,90,.06)}
+  .pill.live{color:var(--done);border-color:rgba(134,176,115,.35);background:rgba(134,176,115,.08)}
+  .hr{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin:24px 0 18px;border:0}
+  nav a{display:block;padding:8px 12px;margin:2px 0;border-radius:8px;color:var(--silver-dim);
+    font-size:13.5px;font-weight:500;border-left:2px solid transparent;transition:all .15s}
+  nav a:hover{color:var(--silver);background:var(--panel2);text-decoration:none}
+  nav a.active{color:var(--gold-bright);background:var(--panel2);border-left-color:var(--gold)}
+  nav a .n{color:var(--silver-faint);font-size:11px;margin-left:6px}
+  .side .foot{margin-top:26px;font-size:11px;color:var(--silver-faint);line-height:1.7}
+  .side .foot b{color:var(--bronze);font-weight:600}
+
+  /* ===== Content ===== */
+  .main{flex:1;min-width:0;padding:40px 52px 96px;max-width:1000px}
+  .top{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:10px;
+    padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:8px}
+  .top h1{font-family:var(--serif);font-size:40px;font-weight:600;color:var(--gold-bright);
+    margin:0;letter-spacing:.4px}
+  .top .stand{font-size:12.5px;color:var(--silver-dim)}
+  .top .stand b{color:var(--bronze)}
+
+  section{padding-top:38px;scroll-margin-top:20px}
+  h2{font-family:var(--serif);font-size:25px;font-weight:600;color:var(--gold);margin:0 0 4px;
+    letter-spacing:.3px}
+  h2 .deco{color:var(--bronze);font-weight:400;margin-right:10px}
+  .lead{color:var(--silver);font-size:16px;line-height:1.7;margin:14px 0 0}
+  .muted{color:var(--silver-dim)}
+
+  .chips{margin:16px 0 0;display:flex;flex-wrap:wrap;gap:8px}
+  .chip{padding:5px 12px;border-radius:7px;background:var(--panel2);border:1px solid var(--line-soft);
+    font-size:12.5px;color:var(--silver)}
+
+  /* Zugänge grid */
+  .grid{display:grid;grid-template-columns:170px 1fr;gap:0;margin-top:18px;
+    border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--panel)}
+  .grid .k{padding:13px 18px;background:var(--panel2);border-bottom:1px solid var(--line-soft);
+    font-size:12px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--bronze)}
+  .grid .v{padding:13px 18px;border-bottom:1px solid var(--line-soft);color:var(--silver);
+    font-size:13.5px;word-break:break-word}
+  .grid .k:last-of-type,.grid .v:last-of-type{border-bottom:0}
+  .grid .v code{background:var(--panel3);padding:2px 7px;border-radius:5px;font-size:12.5px;color:var(--gold-bright)}
+  .vis{display:inline-block;margin-left:8px;padding:1px 9px;border-radius:999px;font-size:10.5px;
+    font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+  .vis.privat{color:var(--bug);border:1px solid rgba(208,126,110,.4);background:rgba(208,126,110,.08)}
+  .vis.public{color:var(--done);border:1px solid rgba(134,176,115,.4);background:rgba(134,176,115,.08)}
+
+  pre{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--bronze);
+    border-radius:10px;padding:16px 18px;overflow-x:auto;font-size:13px;color:var(--silver);
+    line-height:1.65;margin:14px 0}
+  pre .c{color:var(--silver-faint)}
+
+  /* Timeline */
+  .tl{margin:22px 0 0;position:relative;padding-left:26px}
+  .tl:before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:1px;
+    background:linear-gradient(180deg,var(--gold),var(--bronze-deep),transparent)}
+  .ev{position:relative;padding:0 0 24px 22px}
+  .ev:before{content:"";position:absolute;left:-23px;top:5px;width:11px;height:11px;border-radius:50%;
+    background:var(--bg);border:2px solid var(--gold)}
+  .ev .meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:5px}
+  .ev .date{font-size:12px;font-weight:700;color:var(--bronze);letter-spacing:.5px;
+    font-family:var(--sans)}
+  .ev .typ{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;
+    padding:2px 8px;border-radius:5px;border:1px solid currentColor}
+  .typ-feature{color:var(--done)} .typ-deploy{color:var(--deploy)} .typ-bug{color:var(--bug)}
+  .typ-ziel{color:var(--ziel)} .typ-aufgabe{color:var(--gold)} .typ-meilenstein{color:var(--gold-bright)}
+  .ev h3{margin:0;font-size:15px;font-weight:600;color:var(--silver)}
+  .ev p{margin:5px 0 0;font-size:13.5px;color:var(--silver-dim);line-height:1.6}
+  .ev.done:before{background:var(--gold);box-shadow:0 0 0 3px rgba(216,178,90,.12)}
+
+  /* Listen offen/bugs */
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:20px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+  .card h4{margin:0 0 12px;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+    color:var(--bronze)}
+  .card ul{margin:0;padding:0;list-style:none}
+  .card li{position:relative;padding:7px 0 7px 22px;font-size:13.5px;color:var(--silver);
+    border-bottom:1px solid var(--line-soft)}
+  .card li:last-child{border-bottom:0}
+  .card li:before{position:absolute;left:0;top:7px;font-size:12px}
+  .card.open li:before{content:"○";color:var(--open)}
+  .card.bug li:before{content:"●";color:var(--bug)}
+  .card .empty{color:var(--silver-faint);font-style:italic;font-size:13px}
+
+  @media(max-width:860px){
+    body{flex-direction:column}
+    .side{width:100%;flex-basis:auto;height:auto;position:static;border-right:0;border-bottom:1px solid var(--line)}
+    nav{display:flex;flex-wrap:wrap;gap:4px}
+    nav a{border-left:0;border-bottom:2px solid transparent}
+    .main{padding:28px 20px 70px}
+    .cols{grid-template-columns:1fr}
+    .grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+  <aside class="side">
+    <div class="brand" id="b-name">Forschungstermine<span class="sub">Projektübersicht</span></div>
+    <span class="pill" id="b-status">—</span>
+    <hr class="hr">
+    <nav id="nav"></nav>
+    <div class="foot">
+      <b>Auto-gepflegt.</b> Jeder Teilaufgaben-Abschluss wird hier als
+      Chronologie-Eintrag ergänzt und nach GitHub gepusht.<br><br>
+      <span id="b-foot"></span>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="top">
+      <h1 id="t-name">Forschungstermine</h1>
+      <div class="stand">Stand: <b id="t-stand">—</b></div>
+    </div>
+    <div id="body"></div>
+  </main>
+
+<script id="ueData" type="application/json">{
+  "projekt": "Forschungstermine",
+  "ordner": "Forschungstermine",
+  "status": "in Entwicklung",
+  "stand": "2026-06-24",
+  "zweck": "Zentrale, oeffentliche Termin-Plattform der deutschen Textilforschungsinstitute (Konferenzen, Kolloquien, Webinare) - automatisch eingesammelt per Scraper.",
+  "stack": [],
+  "zugaenge": {
+    "git_lokal": "H:\\KI-Projekte\\Forschungstermine",
+    "github": {
+      "url": "https://github.com/textil-mode/web-forschungstermine",
+      "sichtbarkeit": "privat"
+    },
+    "live": "",
+    "vps": "",
+    "uploads": "",
+    "zusatz": []
+  },
+  "schnellstart": [],
+  "offen": [
+    "Erste Schritte definieren"
+  ],
+  "bugs": [],
+  "timeline": [
+    {
+      "datum": "2026-06-24",
+      "typ": "Meilenstein",
+      "status": "erledigt",
+      "titel": "Projekt angelegt",
+      "detail": "Standard-Geruest (Uebersicht + privates Org-Repo) erstellt."
+    }
+  ]
+}</script>
+<script>
+(function(){
+  var d = JSON.parse(document.getElementById('ueData').textContent);
+  var esc = function(s){return (s==null?'':String(s)).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});};
+  var statusLive = /live/i.test(d.status||'');
+  document.title = d.projekt + ' · Projektübersicht';
+  document.getElementById('b-name').innerHTML = esc(d.projekt)+'<span class="sub">Projektübersicht</span>';
+  document.getElementById('t-name').textContent = d.projekt;
+  document.getElementById('t-stand').textContent = d.stand || '—';
+  var sp = document.getElementById('b-status'); sp.textContent = d.status||'—';
+  if(statusLive) sp.className='pill live';
+  document.getElementById('b-foot').innerHTML = (d.github&&d.github.url)
+     ? 'Repo: <a href="'+esc(d.github.url)+'">'+esc((d.github.url||'').replace(/^https:\/\/github.com\//,'').replace(/\.git$/,''))+'</a>' : '';
+
+  var out=[], nav=[];
+  function sec(id,label,n){nav.push('<a href="#'+id+'" data-s="'+id+'">'+label+(n?'<span class="n">'+n+'</span>':'')+'</a>');}
+
+  // Überblick
+  sec('ueberblick','Überblick');
+  var chips = (d.stack||[]).map(function(s){return '<span class="chip">'+esc(s)+'</span>';}).join('');
+  out.push('<section id="ueberblick"><h2><span class="deco">§</span>Überblick</h2>'+
+    '<p class="lead">'+esc(d.zweck)+'</p>'+
+    (chips?'<div class="chips">'+chips+'</div>':'')+'</section>');
+
+  // Zugänge
+  sec('zugaenge','Zugänge &amp; Stack');
+  var z=d.zugaenge||{}, rows=[];
+  function row(k,v){ if(v) rows.push('<div class="k">'+k+'</div><div class="v">'+v+'</div>'); }
+  row('Git lokal', z.git_lokal?'<code>'+esc(z.git_lokal)+'</code>':'');
+  if(z.github&&z.github.url){
+    var vis=z.github.sichtbarkeit||''; var cls=/priv/i.test(vis)?'privat':'public';
+    row('GitHub','<a href="'+esc(z.github.url)+'">'+esc(z.github.url.replace(/^https:\/\/github.com\//,'').replace(/\.git$/,''))+'</a>'+(vis?'<span class="vis '+cls+'">'+esc(vis)+'</span>':''));
+  }
+  row('Live-URL', z.live?'<a href="'+esc(z.live)+'">'+esc(z.live)+'</a>':'');
+  row('VPS / Deploy', z.vps?esc(z.vps):'');
+  row('Uploads / Volumes', z.uploads?esc(z.uploads):'');
+  if(z.zusatz&&z.zusatz.length){
+    row('Zusatz-Apps / Zugänge', z.zusatz.map(function(a){
+      return '<b style="color:var(--gold-bright)">'+esc(a.name)+'</b> — '+esc(a.detail);}).join('<br>'));
+  }
+  out.push('<section id="zugaenge"><h2><span class="deco">§</span>Zugänge &amp; Stack</h2>'+
+    '<div class="grid">'+rows.join('')+'</div></section>');
+
+  // Schnellstart für Claude
+  if(d.schnellstart&&d.schnellstart.length){
+    sec('schnellstart','Schnellstart');
+    var blocks=d.schnellstart.map(function(b){
+      var body=(b.cmds||[]).map(function(l){return /^#/.test(l)?'<span class="c">'+esc(l)+'</span>':esc(l);}).join('\n');
+      return '<h3 style="font-family:var(--serif);color:var(--bronze);font-size:17px;margin:18px 0 0">'+esc(b.titel)+'</h3><pre>'+body+'</pre>';
+    }).join('');
+    out.push('<section id="schnellstart"><h2><span class="deco">§</span>Schnellstart <span class="muted" style="font-size:14px;font-family:var(--sans)">(für Claude)</span></h2>'+blocks+'</section>');
+  }
+
+  // Chronologie
+  sec('chronologie','Chronologie', (d.timeline||[]).length);
+  var tl=(d.timeline||[]).slice().sort(function(a,b){return (b.datum||'').localeCompare(a.datum||'');});
+  var evs=tl.map(function(e){
+    var t=(e.typ||'aufgabe').toLowerCase();
+    return '<div class="ev'+(/(erledigt|done|live)/i.test(e.status||'')?' done':'')+'">'+
+      '<div class="meta"><span class="date">'+esc(e.datum)+'</span>'+
+      '<span class="typ typ-'+t+'">'+esc(e.typ||'Aufgabe')+'</span></div>'+
+      '<h3>'+esc(e.titel)+'</h3>'+(e.detail?'<p>'+esc(e.detail)+'</p>':'')+'</div>';
+  }).join('');
+  out.push('<section id="chronologie"><h2><span class="deco">§</span>Chronologie</h2><div class="tl">'+(evs||'<p class="muted">Noch keine Einträge.</p>')+'</div></section>');
+
+  // Offen & Bugs
+  sec('offen','Offene Punkte &amp; Bugs');
+  function list(arr,cls){
+    if(!arr||!arr.length) return '<p class="empty">Nichts offen.</p>';
+    return '<ul>'+arr.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul>';
+  }
+  out.push('<section id="offen"><h2><span class="deco">§</span>Offene Punkte &amp; Bugs</h2>'+
+    '<div class="cols"><div class="card open"><h4>Offene Punkte</h4>'+list(d.offen)+'</div>'+
+    '<div class="card bug"><h4>Bekannte Bugs</h4>'+list(d.bugs)+'</div></div></section>');
+
+  document.getElementById('body').innerHTML = out.join('');
+  document.getElementById('nav').innerHTML = nav.join('');
+
+  // Scroll-spy
+  var links=[].slice.call(document.querySelectorAll('nav a'));
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(en){ if(en.isIntersecting){
+      links.forEach(function(l){l.classList.toggle('active', l.getAttribute('data-s')===en.target.id);});
+    }});
+  },{rootMargin:'-10% 0px -75% 0px'});
+  document.querySelectorAll('section').forEach(function(s){io.observe(s);});
+})();
+</script>
+</body>
+</html>

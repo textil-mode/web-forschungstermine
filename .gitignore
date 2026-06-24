@@ -1,0 +1,25 @@
+# --- managed by setup (textil-mode) ---
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.pyc
+.next/
+out/
+dist/
+build/
+.cache/
+.turbo/
+.claude/
+.playwright-mcp/
+*.log
+*.exe
+*.pack
+*.sst
+*.tmp
+# secrets (Templates erlaubt)
+.env
+.env.*
+!.env.example
+!.env.sample
+# --- end managed ---
