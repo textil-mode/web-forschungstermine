@@ -1,8 +1,9 @@
-"""KI-Extraktion: holt unstrukturierte Institutsseiten und lässt Claude die
+"""KI-Extraktion: holt unstrukturierte Institutsseiten und lässt ein KI-Modell die
 Veranstaltungen mit eindeutigem künftigem Datum als JSON herausziehen.
 
+Anbieter: Google Gemini (kostenloser Free-Tier-Key, Env GEMINI_API_KEY).
 Ergebnis sind Kandidaten (Event-Dicts), die als Vorschläge in `pending` landen.
-Ohne ANTHROPIC_API_KEY oder bei Fehlern wird leer zurückgegeben (robust).
+Ohne Key oder bei Fehlern wird leer zurückgegeben (robust).
 """
 from __future__ import annotations
 
@@ -20,7 +21,7 @@ from scraper.model import Event
 
 log = logging.getLogger("forschungstermine.ki")
 
-MODEL = "claude-haiku-4-5"
+MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.0-flash")
 UA = "Mozilla/5.0 (compatible; ForschungstermineBot/1.0; +https://ki-textil-mode.de/forschungstermine/)"
 
 # Institute ohne maschinenlesbare Terminliste — News-/Presse-/Event-Seiten für die KI.
@@ -62,15 +63,16 @@ def _page_text(url: str) -> str:
 
 
 def _client():
-    key = os.environ.get("ANTHROPIC_API_KEY")
+    key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
     if not key:
-        log.info("KI-Extraktion übersprungen: ANTHROPIC_API_KEY fehlt")
+        log.info("KI-Extraktion übersprungen: GEMINI_API_KEY fehlt")
         return None
     try:
-        import anthropic
-        return anthropic.Anthropic(api_key=key)
+        import google.generativeai as genai
+        genai.configure(api_key=key)
+        return genai.GenerativeModel(MODEL)
     except Exception as exc:  # SDK fehlt o. Ä.
-        log.warning("Anthropic-SDK nicht verfügbar: %s", exc)
+        log.warning("Gemini-SDK nicht verfügbar: %s", exc)
         return None
 
 
@@ -83,11 +85,8 @@ def _extract_one(client, target: dict, today: date) -> list[dict]:
     prompt = _PROMPT.format(today=today.isoformat(), institute=target["institute"],
                             url=target["url"], text=text)
     try:
-        msg = client.messages.create(
-            model=MODEL, max_tokens=1500,
-            messages=[{"role": "user", "content": prompt}],
-        )
-        raw = msg.content[0].text.strip()
+        resp = client.generate_content(prompt)
+        raw = (resp.text or "").strip()
     except Exception as exc:
         log.warning("KI %s: API-Fehler: %s", target["institute"], exc)
         return []
