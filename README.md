@@ -35,21 +35,35 @@ python -m http.server -d site 8099   # Seite unter http://127.0.0.1:8099
 pytest -q                         # Tests
 ```
 
-## Aktive Institute
+## Institute
+
+Es werden **ausschließlich** Institute aus der offiziellen t+m-Liste berücksichtigt:
+<https://textil-mode.de/de/forschung/institute/> (Stand: 17 Einträge, DITF zählt 3×).
+
+### Aktiv angebunden
 
 | Institut | Quelle | Status |
 |---|---|---|
-| Hohenstein | `hohenstein.de/de/termine` | aktiv |
 | DITF Denkendorf | `ditf.de/de/aktuelles/termine` | aktiv |
+| ITA Aachen | `ita.rwth-aachen.de/.../aktuelle-veranstaltungen/?showall=1` | aktiv |
+| wfk Cleaning Technology Institute | `wfk.de/transfer/seminare-workshops-konferenzen/` | aktiv |
 
-**Geprüft, aber (noch) nicht angebunden:**
+> Hohenstein war zunächst angebunden, steht aber **nicht** auf der t+m-Liste und
+> wurde daher entfernt.
 
-- **STFI Chemnitz** (`stfi.de/events`): listet nur eine *Branchentermine*-Tabelle
-  (fremde Events ohne Einzel-Links) — als Institutstermine ungeeignet.
-- **ITA / DWI Aachen** (RWTH-CMS): Termine werden per JavaScript nachgeladen,
-  im HTML nicht enthalten → erfordert Headless-Browser.
-- Weitere FKT-Institute (TITV Greiz, DTNW, Faserinstitut …): keine maschinen­lesbare,
-  verlinkte Terminliste an erratbarer URL gefunden.
+### Geprüft, (noch) nicht angebunden
+
+- **STFI Chemnitz** (`stfi.de/events`): hat eigene, verlinkte Termin-Cards, das
+  Datum steht aber nur im Fließtext der Detailseiten → bräuchte Detailseiten-Abruf
+  mit Freitext-Parsing. Vertagt.
+- **TITV Greiz** (`titv-greiz.de/.../alle-termine-auf-einen-blick`): echte eigene
+  Terminliste, liefert aber bei jedem HTTP-GET **500** (Bot-Block). Erneut testen.
+- **ITM Dresden** (TU-CMS): Terminseite hinter Shibboleth-SSO / JS → nicht ohne
+  Headless-Browser bzw. Login scrapebar.
+- **DWI Aachen, DTNW, FIBRE, ITA Augsburg, Kiwa TBU, TFI, TITK**: keine eigene,
+  maschinenlesbare Terminliste mit konkreten künftigen Datums-Einträgen gefunden.
+- **ifm (HS Hof), FTB (HS Niederrhein)**: nur zentrale Hochschul-Kalender, nicht
+  institutsspezifisch → bewusst ausgelassen.
 
 ## Neues Institut hinzufügen
 

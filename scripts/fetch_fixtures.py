@@ -14,9 +14,10 @@ UA = "Mozilla/5.0 (compatible; ForschungstermineBot/1.0; +https://ki-textil-mode
 
 TARGETS = {
     "ditf": "https://www.ditf.de/de/aktuelles/termine",
-    "hohenstein": "https://www.hohenstein.de/de/termine",
-    "stfi": "https://www.stfi.de/aktuelles/termine",
-    "ita_aachen": "https://www.ita.rwth-aachen.de/cms/ita/das-institut/~jfap/aktuelle-veranstaltungen/?showall=1&lidx=1",
+    "ita_aachen": "https://www.ita.rwth-aachen.de/cms/ita/das-institut/~jfap/aktuelle-veranstaltungen/?showall=1",
+    "stfi": "https://www.stfi.de/events",
+    "wfk": "https://wfk.de/transfer/seminare-workshops-konferenzen/",
+    "titv": "https://www.titv-greiz.de/de/akademie/alle-termine-auf-einen-blick",
 }
 
 for name, url in TARGETS.items():
@@ -26,4 +27,4 @@ for name, url in TARGETS.items():
         out.write_text(r.text, encoding="utf-8")
         print(f"{name:12s} {r.status_code}  {len(r.text):>8d} bytes  -> {out.name}  ({r.url})")
     except Exception as exc:
-        print(f"{name:12s} FEHLER: {exc}")
+        print(f"{name:12s} FEHLER: {type(exc).__name__}: {exc}")

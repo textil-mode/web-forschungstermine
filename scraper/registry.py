@@ -1,13 +1,17 @@
 """Registry der aktiven Institut-Adapter.
 
-Jedes Institut, das hier gelistet ist, wird beim Build abgefragt. Neue Institute
-werden ergänzt, indem ein Adapter unter scraper/adapters/ angelegt und hier
-eingetragen wird.
+Es werden ausschließlich Institute aus der offiziellen t+m-Liste berücksichtigt:
+https://textil-mode.de/de/forschung/institute/
+
+Neue Institute werden ergänzt, indem ein Adapter unter scraper/adapters/ angelegt
+und hier eingetragen wird.
 """
 from scraper.adapters.ditf import DitfAdapter
-from scraper.adapters.hohenstein import HohensteinAdapter
+from scraper.adapters.ita_aachen import ItaAachenAdapter
+from scraper.adapters.wfk import WfkAdapter
 
 ACTIVE_ADAPTERS = [
-    HohensteinAdapter(),
     DitfAdapter(),
+    ItaAachenAdapter(),
+    WfkAdapter(),
 ]
