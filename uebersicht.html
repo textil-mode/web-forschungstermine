@@ -156,18 +156,23 @@
 <script id="ueData" type="application/json">{
   "projekt": "Forschungstermine",
   "ordner": "Forschungstermine",
-  "status": "in Entwicklung",
+  "status": "live",
   "stand": "2026-06-24",
   "zweck": "Zentrale, oeffentliche Termin-Plattform der deutschen Textilforschungsinstitute (Konferenzen, Kolloquien, Webinare) - automatisch eingesammelt per Scraper.",
-  "stack": [],
+  "stack": [
+    "Python (httpx, selectolax)",
+    "Vanilla JS/HTML/CSS",
+    "nginx (statisch)",
+    "Cron"
+  ],
   "zugaenge": {
     "git_lokal": "H:\\KI-Projekte\\Forschungstermine",
     "github": {
       "url": "https://github.com/textil-mode/web-forschungstermine",
       "sichtbarkeit": "privat"
     },
-    "live": "",
-    "vps": "",
+    "live": "https://ki-textil-mode.de/forschungstermine/",
+    "vps": "VPS 1400170 - Repo unter /opt/web-forschungstermine, nginx location /forschungstermine/ (alias auf site/), Cron 0 3 * * * run-scraper.sh -> events.json. nginx-Backup: /root/ki-textil-mode.de.bak-2026-06-24",
     "uploads": "",
     "zusatz": []
   },
@@ -177,6 +182,20 @@
   ],
   "bugs": [],
   "timeline": [
+    {
+      "datum": "2026-06-24",
+      "typ": "feature",
+      "status": "erledigt",
+      "titel": "Design: Bold-Yellow-Template",
+      "detail": "Look auf Bold Yellow umgestellt (Signalgelb/Schwarz, Instrument Serif, Pill-Buttons, Invert-Hover, Custom-Cursor). Lokal verifiziert und per git pull auf den VPS deployt; live geprueft."
+    },
+    {
+      "datum": "2026-06-24",
+      "typ": "deploy",
+      "status": "live",
+      "titel": "Live unter /forschungstermine/",
+      "detail": "Auf VPS deployt: Repo nach /opt geklont, Python-venv, nginx-Pfad ki-textil-mode.de/forschungstermine/ (alias auf site/), taeglicher Cron 03:00. Smoke-Test 200 OK, 11 Termine, Seite verifiziert."
+    },
     {
       "datum": "2026-06-24",
       "typ": "feature",
