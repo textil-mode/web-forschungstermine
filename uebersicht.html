@@ -172,7 +172,7 @@
       "sichtbarkeit": "privat"
     },
     "live": "https://ki-textil-mode.de/forschungstermine/",
-    "vps": "VPS 1400170 - Repo unter /opt/web-forschungstermine, nginx location /forschungstermine/ (alias auf site/), Cron 0 3 * * * run-scraper.sh -> events.json. nginx-Backup: /root/ki-textil-mode.de.bak-2026-06-24",
+    "vps": "VPS 1400170 - Repo /opt/web-forschungstermine. FastAPI-Dienst (systemd 'forschungstermine', uvicorn Port 8095, SQLite data/events.db). nginx: /forschungstermine/ statisch (alias site/), /forschungstermine/api/ -> 8095 oeffentlich, /forschungstermine/admin -> 8095 Basic-Auth (.htpasswd-root). Admin = Aktualisieren-Button + KI-Freigabe. Cron 0 3 run-scraper.sh -> python -m app.refresh. KI: Google Gemini (gemini-2.0-flash), GEMINI_API_KEY in .env (noch leer = KI inaktiv). Aktivieren: GEMINI_API_KEY in /opt/web-forschungstermine/.env, dann systemctl restart forschungstermine.",
     "uploads": "",
     "zusatz": []
   },
@@ -182,6 +182,13 @@
   ],
   "bugs": [],
   "timeline": [
+    {
+      "datum": "2026-06-24",
+      "typ": "feature",
+      "status": "erledigt",
+      "titel": "KI-Extraktion auf Gemini (kostenlos) umgestellt",
+      "detail": "ki_extract nutzt jetzt Google Gemini (gemini-2.0-flash, kostenloser Free Tier) statt Anthropic. Code auf VPS deployt, Dienst aktiv, API 200. KI aktiv, sobald GEMINI_API_KEY in .env eingetragen ist. 37 Tests gruen."
+    },
     {
       "datum": "2026-06-24",
       "typ": "deploy",
