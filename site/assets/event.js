@@ -9,7 +9,7 @@ async function init(){
   const root = document.getElementById("detail");
   let events = [];
   try{
-    const res = await fetch("data/events.json", {cache:"no-store"});
+    const res = await fetch("api/events", {cache:"no-store"});
     events = (await res.json()).events || [];
   }catch(e){ events = []; }
 

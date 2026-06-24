@@ -11,19 +11,35 @@ Live: **https://ki-textil-mode.de/forschungstermine/**
 ## Aufbau
 
 ```
-scraper/            Python-Scraper (ein Adapter pro Institut) → site/data/events.json
+scraper/            Scraper (ein Adapter pro Institut) + KI-Extraktion
   model.py          Event-Datenmodell (stabile ID, Validierung)
-  adapters/base.py  Adapter-Protokoll + Helfer (HTTP, deutsche Datumsparser)
-  adapters/*.py     je ein Institut
+  fields.py         Innovationsfelder + Stichwort-Klassifizierung
+  adapters/*.py     je ein Institut (DITF, ITA, STFI, wfk)
   registry.py       Liste der aktiven Adapter
-  build.py          führt alle Adapter zusammen → events.json
-site/               statische Seite (kein App-Server nötig)
-  index.html        Liste (Standard) + Kalender (Umschalter)
+  ki_extract.py     KI-Extraktion (Claude) für unstrukturierte Institute → Vorschläge
+app/                FastAPI-Dienst + SQLite
+  db.py             events (live) · pending (KI-Vorschläge) · rejected
+  refresh.py        ein Lauf: Adapter → events, KI → pending (CLI: python -m app.refresh)
+  api.py            GET /api/events · POST /admin/refresh · /admin · approve/reject
+site/               statisches Frontend (Tex-Started-Look), liest api/events
+  index.html        Liste + Kalender + Filter (Innovationsfelder, Suche)
   event.html        Detailseite je Termin (?id=)
-  assets/           style.css (Elegant-Look), app.js, event.js
-  data/events.json  vom Scraper erzeugt
-tests/              pytest (Adapter gegen gespeicherte HTML-Fixtures)
+deploy/             systemd-Unit + setup.sh für den VPS
+tests/              pytest (Adapter, DB, Refresh, Felder)
 ```
+
+## Backend & „Knopfdruck"-Aktualisierung
+
+- **Serverseitig** (kein Browser-Scraping): Der FastAPI-Dienst hält die Termine in
+  einer **SQLite-DB**. Die öffentliche Seite liest sie über `GET /api/events`.
+- **Aktualisieren-Button** unter `/forschungstermine/admin` (HTTP-Basic-Auth) startet
+  `POST /admin/refresh` → strukturierte Adapter schreiben live, KI-Vorschläge landen
+  in `pending`.
+- **KI-Vorschläge** der nicht scrapebaren Institute erscheinen im Admin mit
+  **Freigeben / Verwerfen** (1 Klick). Freigegeben = live, Verworfen = dauerhaft weg.
+- **Cron 03:00** ruft `python -m app.refresh` → vollautomatischer Nachtlauf.
+- Deploy: `bash deploy/setup.sh` (venv, Dienst, Erstbefüllung); nginx proxyt
+  `/forschungstermine/api/` (öffentlich) und `/forschungstermine/admin` (auth).
 
 ## Lokal entwickeln
 

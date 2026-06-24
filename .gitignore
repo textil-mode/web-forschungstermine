@@ -23,3 +23,7 @@ build/
 !.env.example
 !.env.sample
 # --- end managed ---
+
+# SQLite-Datenbank (Laufzeit-Status, nicht versionieren)
+/data/
+*.db

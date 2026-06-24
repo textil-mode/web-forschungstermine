@@ -14,7 +14,7 @@ init();
 
 async function init(){
   try{
-    const res = await fetch("data/events.json", {cache:"no-store"});
+    const res = await fetch("api/events", {cache:"no-store"});
     const data = await res.json();
     EVENTS = data.events || [];
     FIELDS = data.fields || [];

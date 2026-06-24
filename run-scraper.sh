@@ -1,14 +1,12 @@
 #!/usr/bin/env bash
-# Cron-Entrypoint: aktualisiert site/data/events.json aus den aktiven Adaptern.
-# Aufruf (auf dem VPS, täglich per Cron):
-#   /pfad/zu/web-forschungstermine/run-scraper.sh
+# Cron-Entrypoint: aktualisiert die Datenbank serverseitig (strukturierte Adapter
+# -> events; KI-Extraktion -> pending). Aufruf (täglich per Cron auf dem VPS):
+#   /opt/web-forschungstermine/run-scraper.sh
 set -euo pipefail
 cd "$(dirname "$0")"
 
-if [ -d .venv ]; then
-  # shellcheck disable=SC1091
-  source .venv/bin/activate
-fi
+if [ -f .env ]; then set -a; . ./.env; set +a; fi
+if [ -d .venv ]; then . .venv/bin/activate; fi
 
-python -m scraper.build
-echo "events.json aktualisiert: $(date -Is)"
+python -m app.refresh
+echo "Datenbank aktualisiert: $(date -Is)"
