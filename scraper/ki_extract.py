@@ -1,7 +1,7 @@
 """KI-Extraktion: holt unstrukturierte Institutsseiten und lässt ein KI-Modell die
 Veranstaltungen mit eindeutigem künftigem Datum als JSON herausziehen.
 
-Anbieter: Google Gemini (kostenloser Free-Tier-Key, Env GEMINI_API_KEY).
+Anbieter: Groq (kostenloser Free-Tier-Key, Env GROQ_API_KEY) — OpenAI-kompatible API.
 Ergebnis sind Kandidaten (Event-Dicts), die als Vorschläge in `pending` landen.
 Ohne Key oder bei Fehlern wird leer zurückgegeben (robust).
 """
@@ -21,7 +21,7 @@ from scraper.model import Event
 
 log = logging.getLogger("forschungstermine.ki")
 
-MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.0-flash")
+MODEL = os.environ.get("GROQ_MODEL", "llama-3.3-70b-versatile")
 UA = "Mozilla/5.0 (compatible; ForschungstermineBot/1.0; +https://ki-textil-mode.de/forschungstermine/)"
 
 # Institute ohne maschinenlesbare Terminliste — News-/Presse-/Event-Seiten für die KI.
@@ -63,16 +63,15 @@ def _page_text(url: str) -> str:
 
 
 def _client():
-    key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
+    key = os.environ.get("GROQ_API_KEY")
     if not key:
-        log.info("KI-Extraktion übersprungen: GEMINI_API_KEY fehlt")
+        log.info("KI-Extraktion übersprungen: GROQ_API_KEY fehlt")
         return None
     try:
-        import google.generativeai as genai
-        genai.configure(api_key=key)
-        return genai.GenerativeModel(MODEL)
+        from groq import Groq
+        return Groq(api_key=key)
     except Exception as exc:  # SDK fehlt o. Ä.
-        log.warning("Gemini-SDK nicht verfügbar: %s", exc)
+        log.warning("Groq-SDK nicht verfügbar: %s", exc)
         return None
 
 
@@ -85,8 +84,11 @@ def _extract_one(client, target: dict, today: date) -> list[dict]:
     prompt = _PROMPT.format(today=today.isoformat(), institute=target["institute"],
                             url=target["url"], text=text)
     try:
-        resp = client.generate_content(prompt)
-        raw = (resp.text or "").strip()
+        resp = client.chat.completions.create(
+            model=MODEL, temperature=0, max_tokens=1500,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        raw = (resp.choices[0].message.content or "").strip()
     except Exception as exc:
         log.warning("KI %s: API-Fehler: %s", target["institute"], exc)
         return []

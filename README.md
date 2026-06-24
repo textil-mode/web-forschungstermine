@@ -16,7 +16,7 @@ scraper/            Scraper (ein Adapter pro Institut) + KI-Extraktion
   fields.py         Innovationsfelder + Stichwort-Klassifizierung
   adapters/*.py     je ein Institut (DITF, ITA, STFI, wfk)
   registry.py       Liste der aktiven Adapter
-  ki_extract.py     KI-Extraktion (Google Gemini, Free Tier) für unstrukturierte Institute → Vorschläge
+  ki_extract.py     KI-Extraktion (Groq, Free Tier) für unstrukturierte Institute → Vorschläge
 app/                FastAPI-Dienst + SQLite
   db.py             events (live) · pending (KI-Vorschläge) · rejected
   refresh.py        ein Lauf: Adapter → events, KI → pending (CLI: python -m app.refresh)
@@ -35,10 +35,10 @@ tests/              pytest (Adapter, DB, Refresh, Felder)
 - **Aktualisieren-Button** unter `/forschungstermine/admin` (HTTP-Basic-Auth) startet
   `POST /admin/refresh` → strukturierte Adapter schreiben live, KI-Vorschläge landen
   in `pending`.
-- **KI-Vorschläge** der nicht scrapebaren Institute (Google Gemini, kostenloser
-  Free Tier, `GEMINI_API_KEY` in `.env`) erscheinen im Admin mit
-  **Freigeben / Verwerfen** (1 Klick). Freigegeben = live, Verworfen = dauerhaft weg.
-  Ohne Key bleibt die KI inaktiv (sauber übersprungen).
+- **KI-Vorschläge** der nicht scrapebaren Institute (Groq, kostenloser Free Tier,
+  `GROQ_API_KEY` in `.env`) erscheinen im Admin mit **Freigeben / Verwerfen**
+  (1 Klick). Freigegeben = live, Verworfen = dauerhaft weg. Ohne Key bleibt die
+  KI inaktiv (sauber übersprungen).
 - **Cron 03:00** ruft `python -m app.refresh` → vollautomatischer Nachtlauf.
 - Deploy: `bash deploy/setup.sh` (venv, Dienst, Erstbefüllung); nginx proxyt
   `/forschungstermine/api/` (öffentlich) und `/forschungstermine/admin` (auth).
