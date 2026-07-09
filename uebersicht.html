@@ -186,6 +186,13 @@
       "datum": "2026-07-09",
       "typ": "feature",
       "status": "live",
+      "titel": "Login-Button + eigene Admin-Zugangsdaten",
+      "detail": "Startseite hat oben rechts einen 'Login'-Button, der in den Admin-Bereich fuehrt. Admin-Auth von der geteilten .htpasswd-root auf eine eigene .htpasswd-forschungstermine umgestellt (Benutzer mareike). nginx-Location 271 repointet, Backup /root/ki-textil-mode.de.bak-2026-07-09, nginx -t ok, reload. Smoke-Test: mit Auth 200, ohne 401. Andere Projekte unberuehrt."
+    },
+    {
+      "datum": "2026-07-09",
+      "typ": "feature",
+      "status": "live",
       "titel": "E-Mail-Benachrichtigung via AgentMail aktiv",
       "detail": "Jede Formular-Einsendung loest automatisch eine Benachrichtigung an mschuckert@textil-mode.de aus (Absender-Inbox michaelschuckert@agentmail.to, Reply-To = Absender der Anfrage). Server nutzt AgentMail-REST-API; AGENTMAIL_API_KEY/INBOX + MAIL_TO in .env auf dem VPS. End-to-End verifiziert: Live-POST 200, AgentMail meldet Nachricht als 'sent', Testmail beim Empfaenger angekommen."
     },
