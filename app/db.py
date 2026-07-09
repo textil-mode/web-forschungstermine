@@ -37,6 +37,12 @@ def init_db() -> None:
                     confidence REAL, updated_at TEXT
                 )""")
         con.execute("CREATE TABLE IF NOT EXISTS rejected (id TEXT PRIMARY KEY, at TEXT)")
+        con.execute("""
+            CREATE TABLE IF NOT EXISTS companies (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                company TEXT NOT NULL, contact TEXT, email TEXT, phone TEXT,
+                website TEXT, branch TEXT, interest TEXT, created_at TEXT
+            )""")
 
 
 def _to_row(ev: dict, source: str, confidence: float | None = None) -> dict:
@@ -115,6 +121,27 @@ def approve(pending_id: str) -> bool:
         con.execute(f"INSERT OR REPLACE INTO events ({cols}) VALUES ({ph})", [r[k] for k in keys])
         con.execute("DELETE FROM pending WHERE id=?", (pending_id,))
         return True
+
+
+_COMPANY_FIELDS = ("company", "contact", "email", "phone", "website", "branch", "interest")
+
+
+def add_company(data: dict) -> int:
+    """Unternehmens-Anfrage speichern. Gibt die neue Zeilen-ID zurück."""
+    row = {k: (str(data.get(k) or "").strip() or None) for k in _COMPANY_FIELDS}
+    row["created_at"] = datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
+    cols = ", ".join(row.keys())
+    ph = ", ".join("?" for _ in row)
+    with _connect() as con:
+        cur = con.execute(f"INSERT INTO companies ({cols}) VALUES ({ph})", list(row.values()))
+        return int(cur.lastrowid)
+
+
+def get_companies() -> list[dict]:
+    """Alle Anfragen, neueste zuerst."""
+    with _connect() as con:
+        rows = con.execute("SELECT * FROM companies ORDER BY created_at DESC, id DESC").fetchall()
+    return [dict(r) for r in rows]
 
 
 def reject(pending_id: str) -> bool:

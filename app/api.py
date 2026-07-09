@@ -15,7 +15,7 @@ from fastapi import FastAPI, Form
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
-from app import db
+from app import db, mail
 from app.refresh import run_refresh
 from scraper.fields import field_defs
 
@@ -39,6 +39,30 @@ def api_events() -> JSONResponse:
         "fields": field_defs(),
         "events": events,
     })
+
+
+@app.post("/api/companies")
+def api_companies(
+    company: str = Form(...),
+    contact: str = Form(""),
+    email: str = Form(""),
+    phone: str = Form(""),
+    website: str = Form(""),
+    branch: str = Form(""),
+    interest: str = Form(""),
+    hp: str = Form(""),
+) -> JSONResponse:
+    """Öffentliche Unternehmens-Anfrage entgegennehmen (Formular „Für Unternehmen")."""
+    if hp.strip():  # Honeypot gefüllt -> Bot; still schlucken.
+        return JSONResponse({"ok": True})
+    if not company.strip() or not email.strip():
+        return JSONResponse({"ok": False, "error": "Firma und E-Mail sind Pflichtfelder."},
+                            status_code=422)
+    data = {"company": company, "contact": contact, "email": email, "phone": phone,
+            "website": website, "branch": branch, "interest": interest}
+    db.add_company(data)
+    mail.send_company_notification(data)
+    return JSONResponse({"ok": True})
 
 
 @app.post("/admin/refresh")
@@ -65,14 +89,39 @@ def admin_reject(id: str = Form(...)) -> RedirectResponse:
 def admin_page(msg: str = "") -> HTMLResponse:
     pending = db.get_pending()
     live = db.get_events()
-    return HTMLResponse(_render_admin(pending, live, msg))
+    companies = db.get_companies()
+    return HTMLResponse(_render_admin(pending, live, companies, msg))
 
 
 def _esc(s) -> str:
     return html.escape(str(s or ""))
 
 
-def _render_admin(pending: list[dict], live: list[dict], msg: str) -> str:
+def _render_companies(companies: list[dict]) -> str:
+    if not companies:
+        return '<tr><td colspan="4" class="empty">Noch keine Anfragen.</td></tr>'
+    rows = ""
+    for c in companies:
+        when = _esc((c.get("created_at") or "")[:16].replace("T", " "))
+        contact_bits = " · ".join(filter(None, [_esc(c.get("contact")), _esc(c.get("branch"))]))
+        links = ""
+        if c.get("email"):
+            links += f'<a href="mailto:{_esc(c["email"])}">{_esc(c["email"])}</a>'
+        if c.get("phone"):
+            links += f'<br><span class="meta">{_esc(c["phone"])}</span>'
+        if c.get("website"):
+            links += f'<br><a href="{_esc(c["website"])}" target="_blank" rel="noopener">Website ↗</a>'
+        rows += f"""
+        <tr>
+          <td class="d">{when}</td>
+          <td><b>{_esc(c.get('company'))}</b>{f'<br><span class="meta">{contact_bits}</span>' if contact_bits else ''}</td>
+          <td>{links or '—'}</td>
+          <td>{_esc(c.get('interest'))}</td>
+        </tr>"""
+    return rows
+
+
+def _render_admin(pending: list[dict], live: list[dict], companies: list[dict], msg: str) -> str:
     rows = ""
     for ev in pending:
         conf = ev.get("confidence")
@@ -125,6 +174,8 @@ a{{color:var(--cyan-dk)}}.act{{display:flex;gap:.5rem;white-space:nowrap}}
 {f'<div class="msg">{_esc(msg)}</div>' if msg else ''}
 <h2>KI-Vorschläge zur Freigabe</h2>
 <table><tbody>{rows}</tbody></table>
+<h2>Unternehmens-Anfragen ({len(companies)})</h2>
+<table><tbody>{_render_companies(companies)}</tbody></table>
 </body></html>"""
 
 

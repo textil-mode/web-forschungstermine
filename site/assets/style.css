@@ -156,9 +156,38 @@ footer.site a:hover{color:var(--magenta)}
   text-transform:uppercase;transition:transform .15s,box-shadow .15s,background .2s}
 .cta:hover{background:var(--navy);transform:translateY(-2px);box-shadow:0 10px 30px rgba(15,37,64,.25)}
 
+/* Formular „Für Unternehmen" */
+.cform{max-width:720px;margin:2.4rem auto 0;display:flex;flex-direction:column;gap:1.3rem}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:1.3rem}
+.field{display:flex;flex-direction:column;gap:.45rem}
+.field>span{font-family:var(--display);font-size:.6rem;font-weight:500;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--cyan-dk)}
+.field>span em{color:var(--magenta);font-style:normal}
+.field input,.field textarea{width:100%;background:var(--white);border:1.5px solid var(--border-2);
+  border-radius:.4rem;padding:.8rem 1rem;color:var(--navy);font-family:var(--body);font-size:.95rem;
+  outline:none;transition:border-color .2s;cursor:none}
+.field textarea{resize:vertical;min-height:120px;line-height:1.5}
+.field input:focus,.field textarea:focus{border-color:var(--cyan)}
+.field input::placeholder,.field textarea::placeholder{color:var(--muted-lt)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.fbar{display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap;margin-top:.4rem}
+.cform .cta{border:0;cursor:none;font-size:.72rem}
+.cform .cta:disabled{opacity:.6}
+.fnote{font-family:var(--body);font-size:.9rem}
+.fnote.ok{color:var(--green);font-weight:600}
+.fnote.err{color:var(--magenta);font-weight:600}
+
+/* Kopfzeilen-Link */
+.topnav{display:flex;justify-content:flex-end;margin:20px 0 -8px}
+.topnav a{font-family:var(--display);font-size:.62rem;font-weight:500;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--navy-mid);text-decoration:none;border:1.5px solid var(--border-2);
+  border-radius:2rem;padding:.5rem 1.1rem;transition:all .2s}
+.topnav a:hover{border-color:var(--cyan);color:var(--cyan-dk);transform:translateY(-2px)}
+
 @media(max-width:600px){
   body{cursor:auto} .cursor,.cursor-ring{display:none}
   .event{grid-template-columns:58px 1fr;gap:1rem;padding:1.1rem 1.1rem}
   .arrow{display:none}
   .cal-cell{min-height:58px}
+  .fgrid{grid-template-columns:1fr}
 }
