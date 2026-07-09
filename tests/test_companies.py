@@ -65,27 +65,30 @@ def test_honeypot_is_dropped(client):
 
 
 def test_mail_body_lists_innovation(monkeypatch):
-    monkeypatch.setenv("SMTP_HOST", "h"); monkeypatch.setenv("SMTP_USER", "u")
-    monkeypatch.setenv("SMTP_PASS", "p"); monkeypatch.setenv("MAIL_TO", "to@x.de")
+    monkeypatch.setenv("AGENTMAIL_API_KEY", "k")
+    monkeypatch.setenv("AGENTMAIL_INBOX", "bot@agentmail.to")
+    monkeypatch.setenv("MAIL_TO", "to@x.de")
     sent = {}
 
-    class FakeSMTP:
-        def __init__(self, *a, **k): pass
-        def __enter__(self): return self
-        def __exit__(self, *a): return False
-        def starttls(self): pass
-        def login(self, *a): pass
-        def send_message(self, msg): sent["body"] = msg.get_content()
+    class FakeResp:
+        status_code = 200
 
-    monkeypatch.setattr(mail.smtplib, "SMTP", FakeSMTP)
+    def fake_post(url, **kw):
+        sent["url"] = url
+        sent["json"] = kw.get("json")
+        return FakeResp()
+
+    monkeypatch.setattr(mail.httpx, "post", fake_post)
     ok = mail.send_company_notification({
         "company": "X", "email": "x@x.de", "innovation": ["Feld A", "Feld B"],
     })
     assert ok is True
-    assert "Feld A" in sent["body"] and "Feld B" in sent["body"]
+    assert "bot@agentmail.to" in sent["url"]
+    assert sent["json"]["to"] == ["to@x.de"]
+    assert "Feld A" in sent["json"]["text"] and "Feld B" in sent["json"]["text"]
 
 
 def test_mail_noop_without_config(monkeypatch):
-    for var in ("SMTP_HOST", "SMTP_USER", "SMTP_PASS", "MAIL_TO"):
+    for var in ("AGENTMAIL_API_KEY", "AGENTMAIL_INBOX", "MAIL_TO"):
         monkeypatch.delenv(var, raising=False)
     assert mail.send_company_notification({"company": "X"}) is False

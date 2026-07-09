@@ -1,14 +1,15 @@
-"""Optionaler E-Mail-Versand bei neuen Unternehmens-Anfragen.
+"""Optionaler E-Mail-Versand bei neuen Pitch-&-Connect-Anfragen über AgentMail.
 
-Nutzt SMTP, wenn SMTP_HOST/SMTP_USER/SMTP_PASS/MAIL_TO in der Umgebung stehen —
-sonst folgenlos (die Anfrage liegt ohnehin in der DB). Fehler werden geschluckt,
-damit eine Mail-Panne nie eine Einsendung verliert.
+Sendet per AgentMail-REST-API, wenn AGENTMAIL_API_KEY, AGENTMAIL_INBOX und
+MAIL_TO in der Umgebung stehen — sonst folgenlos (die Anfrage liegt ohnehin in
+der DB). Fehler werden geschluckt, damit eine Mail-Panne nie eine Einsendung
+verliert.
 """
 from __future__ import annotations
 
 import os
-import smtplib
-from email.message import EmailMessage
+
+import httpx
 
 _LABELS = {
     "company": "Unternehmen", "first_name": "Vorname", "last_name": "Nachname",
@@ -26,36 +27,37 @@ def _fmt(key: str, company: dict) -> str:
     return f"{_LABELS[key]}: {val or '—'}"
 
 
-def send_company_notification(company: dict) -> bool:
-    """Benachrichtigung über eine neue Anfrage senden. True bei Versand."""
-    host = os.environ.get("SMTP_HOST")
-    user = os.environ.get("SMTP_USER")
-    password = os.environ.get("SMTP_PASS")
-    to = os.environ.get("MAIL_TO")
-    if not (host and user and password and to):
-        return False
-
-    port = int(os.environ.get("SMTP_PORT", "587"))
-    sender = os.environ.get("MAIL_FROM", user)
-
+def _build_body(company: dict) -> str:
     lines = [_fmt(k, company) for k in _LABELS]
     innov = company.get("innovation") or []
     if innov:
         lines.append("Innovationsfelder:\n  - " + "\n  - ".join(innov))
-    body = "Neue Pitch-&-Connect-Anfrage über Forschungstermine:\n\n" + "\n".join(lines)
-    msg = EmailMessage()
-    msg["Subject"] = f"Neue Anfrage: {company.get('company') or 'Unternehmen'}"
-    msg["From"] = sender
-    msg["To"] = to
+    return "Neue Pitch-&-Connect-Anfrage über Forschungstermine:\n\n" + "\n".join(lines)
+
+
+def send_company_notification(company: dict) -> bool:
+    """Benachrichtigung über eine neue Anfrage per AgentMail senden. True bei Versand."""
+    api_key = os.environ.get("AGENTMAIL_API_KEY")
+    inbox = os.environ.get("AGENTMAIL_INBOX")
+    to = os.environ.get("MAIL_TO")
+    if not (api_key and inbox and to):
+        return False
+
+    payload = {
+        "to": [to],
+        "subject": f"Neue Anfrage: {company.get('company') or 'Unternehmen'}",
+        "text": _build_body(company),
+    }
     if company.get("email"):
-        msg["Reply-To"] = company["email"]
-    msg.set_content(body)
+        payload["reply_to"] = [company["email"]]
 
     try:
-        with smtplib.SMTP(host, port, timeout=10) as srv:
-            srv.starttls()
-            srv.login(user, password)
-            srv.send_message(msg)
-        return True
+        r = httpx.post(
+            f"https://api.agentmail.to/v0/inboxes/{inbox}/messages/send",
+            headers={"Authorization": f"Bearer {api_key}"},
+            json=payload,
+            timeout=15,
+        )
+        return r.status_code < 300
     except Exception:
         return False
