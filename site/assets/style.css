@@ -212,6 +212,14 @@ fieldset.checks legend{font-family:var(--display);font-size:.82rem;font-weight:6
 .opt span b{font-weight:600}
 .opt:has(input:checked){border-color:var(--cyan);background:rgba(56,188,212,.06)}
 
+/* Login-Button oben rechts (führt in den Admin-Bereich) */
+.login-btn{position:fixed;top:18px;right:20px;z-index:100;font-family:var(--display);
+  font-size:.62rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--navy-mid);background:rgba(255,255,255,.85);backdrop-filter:blur(8px);
+  border:1.5px solid var(--border-2);border-radius:2rem;padding:.5rem 1.2rem;
+  text-decoration:none;cursor:none;transition:all .2s}
+.login-btn:hover{border-color:var(--cyan);color:var(--cyan-dk);transform:translateY(-1px)}
+
 /* Hero-Button „Für Unternehmen" */
 .hero-cta{display:inline-flex;align-items:center;margin:1.8rem 0 .2rem;
   background:var(--navy-mid);color:var(--white);padding:.8rem 1.8rem;border-radius:.3rem;
