@@ -157,7 +157,7 @@
   "projekt": "Forschungstermine",
   "ordner": "Forschungstermine",
   "status": "live",
-  "stand": "2026-06-24",
+  "stand": "2026-07-09",
   "zweck": "Zentrale, oeffentliche Termin-Plattform der deutschen Textilforschungsinstitute (Konferenzen, Kolloquien, Webinare) - automatisch eingesammelt per Scraper.",
   "stack": [
     "Python (httpx, selectolax)",
@@ -182,6 +182,13 @@
   ],
   "bugs": [],
   "timeline": [
+    {
+      "datum": "2026-07-09",
+      "typ": "feature",
+      "status": "erledigt",
+      "titel": "Unterseite 'Für Unternehmen' mit Anfrage-Formular",
+      "detail": "Öffentliches Formular (Firma, Ansprechpartner, E-Mail, Telefon, Website, Branche, Interessensgebiet) -> POST /api/companies -> SQLite-Tabelle 'companies'; Anfragen im /admin sichtbar; optionaler SMTP-Mailversand (aktiv, sobald SMTP_* in .env). Honeypot gegen Bots. 42 Tests grün, lokal end-to-end verifiziert."
+    },
     {
       "datum": "2026-06-24",
       "typ": "feature",
