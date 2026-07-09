@@ -177,6 +177,41 @@ footer.site a:hover{color:var(--magenta)}
 .fnote.ok{color:var(--green);font-weight:600}
 .fnote.err{color:var(--magenta);font-weight:600}
 
+/* Intro-Text über dem Formular */
+.form-intro{max-width:720px;margin:1.8rem auto 0;font-family:var(--body);font-size:.95rem;
+  line-height:1.6;color:var(--muted)}
+
+/* Abschnitts-Überschrift im Formular */
+.fsection{max-width:720px;margin:2.6rem auto .6rem;font-family:var(--display);font-size:.72rem;
+  font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--navy-mid);
+  display:flex;align-items:center;gap:.7rem}
+.fsection::before{content:"";width:1.6rem;height:2px;background:var(--cyan)}
+.fdesc{max-width:720px;margin:-.1rem auto .4rem;font-family:var(--serif);font-style:italic;
+  font-size:1rem;color:var(--muted)}
+
+/* Select wie ein Textfeld */
+.field select{width:100%;background:var(--white);border:1.5px solid var(--border-2);
+  border-radius:.4rem;padding:.8rem 1rem;color:var(--navy);font-family:var(--body);font-size:.95rem;
+  outline:none;transition:border-color .2s;cursor:none}
+.field select:focus{border-color:var(--cyan)}
+
+/* Radio-/Checkbox-Gruppen */
+fieldset.choice,fieldset.checks{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:.55rem}
+fieldset.choice legend,fieldset.checks legend{padding:0;margin-bottom:.2rem}
+fieldset.choice legend span{font-family:var(--display);font-size:.6rem;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--cyan-dk)}
+fieldset.choice legend span em{color:var(--magenta);font-style:normal}
+fieldset.checks{margin-bottom:1.2rem}
+fieldset.checks legend{font-family:var(--display);font-size:.82rem;font-weight:600;color:var(--navy);
+  margin-bottom:.5rem}
+.opt{display:flex;align-items:flex-start;gap:.7rem;background:var(--white);
+  border:1.5px solid var(--border);border-radius:.5rem;padding:.7rem .9rem;cursor:none;
+  font-size:.9rem;line-height:1.4;color:var(--navy);transition:border-color .2s,background .2s}
+.opt:hover{border-color:var(--cyan)}
+.opt input{margin-top:.15rem;accent-color:var(--cyan-dk);width:1rem;height:1rem;flex:0 0 auto;cursor:none}
+.opt span b{font-weight:600}
+.opt:has(input:checked){border-color:var(--cyan);background:rgba(56,188,212,.06)}
+
 /* Hero-Button „Für Unternehmen" */
 .hero-cta{display:inline-flex;align-items:center;margin:1.8rem 0 .2rem;
   background:var(--navy-mid);color:var(--white);padding:.8rem 1.8rem;border-radius:.3rem;

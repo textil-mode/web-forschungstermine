@@ -40,8 +40,10 @@ def init_db() -> None:
         con.execute("""
             CREATE TABLE IF NOT EXISTS companies (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                company TEXT NOT NULL, contact TEXT, email TEXT, phone TEXT,
-                website TEXT, branch TEXT, interest TEXT, created_at TEXT
+                company TEXT NOT NULL, first_name TEXT, last_name TEXT, email TEXT,
+                website TEXT, request_type TEXT, company_desc TEXT, anonymous TEXT,
+                challenge_desc TEXT, innovation TEXT, newsletter TEXT, association TEXT,
+                created_at TEXT
             )""")
 
 
@@ -123,12 +125,16 @@ def approve(pending_id: str) -> bool:
         return True
 
 
-_COMPANY_FIELDS = ("company", "contact", "email", "phone", "website", "branch", "interest")
+_COMPANY_TEXT = ("company", "first_name", "last_name", "email", "website",
+                 "request_type", "company_desc", "anonymous", "challenge_desc",
+                 "newsletter", "association")
 
 
 def add_company(data: dict) -> int:
-    """Unternehmens-Anfrage speichern. Gibt die neue Zeilen-ID zurück."""
-    row = {k: (str(data.get(k) or "").strip() or None) for k in _COMPANY_FIELDS}
+    """Pitch-&-Connect-Anfrage speichern. `innovation` = Liste (als JSON abgelegt).
+    Gibt die neue Zeilen-ID zurück."""
+    row = {k: (str(data.get(k) or "").strip() or None) for k in _COMPANY_TEXT}
+    row["innovation"] = json.dumps(data.get("innovation") or [])
     row["created_at"] = datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
     cols = ", ".join(row.keys())
     ph = ", ".join("?" for _ in row)
@@ -138,10 +144,15 @@ def add_company(data: dict) -> int:
 
 
 def get_companies() -> list[dict]:
-    """Alle Anfragen, neueste zuerst."""
+    """Alle Anfragen, neueste zuerst. `innovation` wird als Liste zurückgegeben."""
     with _connect() as con:
         rows = con.execute("SELECT * FROM companies ORDER BY created_at DESC, id DESC").fetchall()
-    return [dict(r) for r in rows]
+    out = []
+    for r in rows:
+        d = dict(r)
+        d["innovation"] = json.loads(d.get("innovation") or "[]")
+        out.append(d)
+    return out
 
 
 def reject(pending_id: str) -> bool:

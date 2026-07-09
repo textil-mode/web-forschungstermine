@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Für Unternehmen — Forschungstermine</title>
-<meta name="description" content="Ihr Unternehmen möchte mit den deutschen Textilforschungsinstituten zusammenarbeiten? Hinterlassen Sie Ihre Daten — wir bringen Sie in Kontakt.">
+<title>Pitch &amp; Connect — Forschungstermine</title>
+<meta name="description" content="Pitch & Connect: Neue Impulse, Lösungsansätze und Innovationspartner für Ihr Unternehmen der Textil- und Modeindustrie — kostenfrei und unverbindlich.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=Figtree:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -17,48 +17,81 @@
   <a class="back" href="index.html">← Alle Termine</a>
 
   <header class="site">
-    <div class="eyebrow">Textilforschung · Kooperation</div>
-    <h1>Für <span class="accent">Unternehmen.</span></h1>
-    <p class="lede">Sie möchten mit den deutschen Textilforschungsinstituten zusammenarbeiten? Hinterlassen Sie Ihre Daten — wir bringen Sie in Kontakt.</p>
+    <div class="eyebrow">Tex Started · Pitch &amp; Connect</div>
+    <h1>Pitch &amp; <span class="accent">Connect.</span></h1>
+    <p class="lede">Neue Impulse, passende Lösungsansätze und geeignete Innovationspartner für Ihr Unternehmen der Textil- und Modeindustrie — kostenfrei und unverbindlich.</p>
   </header>
 
+  <p class="form-intro">Teilen Sie uns mit, welche Themen Sie interessieren oder welche Fragestellung Sie aktuell beschäftigt. Auf dieser Grundlage prüfen wir passende Startups, Forschungsansätze und Kontakte aus dem Netzwerk von Tex Started, dem Forschungskuratorium Textil und dem Mittelstand-Digital Zentrum Smarte Kreisläufe. Nach dem Absenden melden wir uns bei Ihnen.</p>
+
   <form id="company-form" class="cform" novalidate>
+
+    <h2 class="fsection">Kontaktdaten</h2>
+    <label class="field">
+      <span>Unternehmen <em>*</em></span>
+      <input type="text" name="company" required autocomplete="organization">
+    </label>
     <div class="fgrid">
       <label class="field">
-        <span>Firma <em>*</em></span>
-        <input type="text" name="company" required autocomplete="organization">
+        <span>Ansprechperson (Vorname) <em>*</em></span>
+        <input type="text" name="first_name" required autocomplete="given-name">
       </label>
       <label class="field">
-        <span>Ansprechpartner</span>
-        <input type="text" name="contact" autocomplete="name">
+        <span>Ansprechperson (Nachname) <em>*</em></span>
+        <input type="text" name="last_name" required autocomplete="family-name">
       </label>
       <label class="field">
-        <span>E-Mail <em>*</em></span>
+        <span>E-Mail-Adresse <em>*</em></span>
         <input type="email" name="email" required autocomplete="email">
       </label>
       <label class="field">
-        <span>Telefon</span>
-        <input type="tel" name="phone" autocomplete="tel">
-      </label>
-      <label class="field">
-        <span>Website</span>
-        <input type="url" name="website" placeholder="https://" autocomplete="url">
-      </label>
-      <label class="field">
-        <span>Branche</span>
-        <input type="text" name="branch">
+        <span>Web-Adresse Unternehmen <em>*</em></span>
+        <input type="url" name="website" placeholder="https://" required autocomplete="url">
       </label>
     </div>
+
+    <fieldset class="field choice" data-required="1">
+      <legend><span>Gesuch oder Inspiration? Bitte wählen Sie. <em>*</em></span></legend>
+      <label class="opt"><input type="radio" name="request_type" value="A | Ich suche Ideen und Lösungsansätze für eine konkrete Herausforderung."><span>A &nbsp;|&nbsp; Ich suche Ideen und Lösungsansätze für eine konkrete Herausforderung.</span></label>
+      <label class="opt"><input type="radio" name="request_type" value="B | Ich habe allgemeines Interesse an Inspiration in ausgewählten Innovationsfeldern."><span>B &nbsp;|&nbsp; Ich habe allgemeines Interesse an Inspiration in ausgewählten Innovationsfeldern.</span></label>
+    </fieldset>
+
+    <h2 class="fsection">Beschreibung der Herausforderung</h2>
     <label class="field">
-      <span>Interessensgebiet / Nachricht</span>
-      <textarea name="interest" rows="5" placeholder="Woran sind Sie interessiert? Welche Themen, Materialien oder Projekte?"></textarea>
+      <span>Kurzbeschreibung Ihres Unternehmens <em>*</em></span>
+      <textarea name="company_desc" rows="4" required></textarea>
+    </label>
+    <fieldset class="field choice" data-required="1">
+      <legend><span>Mein Unternehmen möchte anonym bleiben <em>*</em></span></legend>
+      <label class="opt"><input type="radio" name="anonymous" value="Ja"><span>Ja</span></label>
+      <label class="opt"><input type="radio" name="anonymous" value="Nein"><span>Nein</span></label>
+    </fieldset>
+    <label class="field">
+      <span>Kurze Beschreibung Ihrer Herausforderung <em>*</em></span>
+      <textarea name="challenge_desc" rows="4" required></textarea>
+    </label>
+
+    <h2 class="fsection">Innovationsfelder</h2>
+    <p class="fdesc">Optional — wählen Sie die Felder, die für Sie relevant sind.</p>
+    <div id="innovation"></div>
+
+    <h2 class="fsection">Gleich geschafft!</h2>
+    <fieldset class="field choice" data-required="1">
+      <legend><span>Newsletter Tex Started <em>*</em></span></legend>
+      <p class="fdesc">Wir informieren und inspirieren Sie ca. 4×/Jahr über Veranstaltungen und mögliche Pilotprojekte mit Startups.</p>
+      <label class="opt"><input type="radio" name="newsletter" value="Ja"><span>JA, ich möchte den Newsletter erhalten</span></label>
+      <label class="opt"><input type="radio" name="newsletter" value="Nein"><span>NEIN, ich möchte keine Informationen zu Startups in der Textilindustrie</span></label>
+    </fieldset>
+    <label class="field">
+      <span>Mitgliedschaft in einem Textilverband</span>
+      <select name="association" id="association"></select>
     </label>
 
     <!-- Honeypot gegen Bots: für Menschen unsichtbar, leer lassen -->
     <input type="text" name="hp" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
 
     <div class="fbar">
-      <button type="submit" class="cta" id="submit-btn">Senden →</button>
+      <button type="submit" class="cta" id="submit-btn">Senden &nbsp;→</button>
       <span class="fnote" id="form-msg" role="status" aria-live="polite"></span>
     </div>
   </form>

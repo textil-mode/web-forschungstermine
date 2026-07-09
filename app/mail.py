@@ -11,10 +11,19 @@ import smtplib
 from email.message import EmailMessage
 
 _LABELS = {
-    "company": "Firma", "contact": "Ansprechpartner", "email": "E-Mail",
-    "phone": "Telefon", "website": "Website", "branch": "Branche",
-    "interest": "Interessensgebiet / Nachricht",
+    "company": "Unternehmen", "first_name": "Vorname", "last_name": "Nachname",
+    "email": "E-Mail", "website": "Web-Adresse", "request_type": "Gesuch oder Inspiration",
+    "company_desc": "Kurzbeschreibung Unternehmen", "anonymous": "Anonym bleiben",
+    "challenge_desc": "Beschreibung der Herausforderung", "newsletter": "Newsletter",
+    "association": "Textilverband",
 }
+
+
+def _fmt(key: str, company: dict) -> str:
+    val = company.get(key)
+    if isinstance(val, (list, tuple)):
+        val = ", ".join(val)
+    return f"{_LABELS[key]}: {val or '—'}"
 
 
 def send_company_notification(company: dict) -> bool:
@@ -29,9 +38,11 @@ def send_company_notification(company: dict) -> bool:
     port = int(os.environ.get("SMTP_PORT", "587"))
     sender = os.environ.get("MAIL_FROM", user)
 
-    body = "Neue Unternehmens-Anfrage über Forschungstermine:\n\n" + "\n".join(
-        f"{label}: {company.get(key) or '—'}" for key, label in _LABELS.items()
-    )
+    lines = [_fmt(k, company) for k in _LABELS]
+    innov = company.get("innovation") or []
+    if innov:
+        lines.append("Innovationsfelder:\n  - " + "\n  - ".join(innov))
+    body = "Neue Pitch-&-Connect-Anfrage über Forschungstermine:\n\n" + "\n".join(lines)
     msg = EmailMessage()
     msg["Subject"] = f"Neue Anfrage: {company.get('company') or 'Unternehmen'}"
     msg["From"] = sender

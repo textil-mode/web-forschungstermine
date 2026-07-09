@@ -44,22 +44,30 @@ def api_events() -> JSONResponse:
 @app.post("/api/companies")
 def api_companies(
     company: str = Form(...),
-    contact: str = Form(""),
+    first_name: str = Form(""),
+    last_name: str = Form(""),
     email: str = Form(""),
-    phone: str = Form(""),
     website: str = Form(""),
-    branch: str = Form(""),
-    interest: str = Form(""),
+    request_type: str = Form(""),
+    company_desc: str = Form(""),
+    anonymous: str = Form(""),
+    challenge_desc: str = Form(""),
+    innovation: list[str] = Form(default=[]),
+    newsletter: str = Form(""),
+    association: str = Form(""),
     hp: str = Form(""),
 ) -> JSONResponse:
-    """Öffentliche Unternehmens-Anfrage entgegennehmen (Formular „Für Unternehmen")."""
+    """Öffentliche Pitch-&-Connect-Anfrage entgegennehmen."""
     if hp.strip():  # Honeypot gefüllt -> Bot; still schlucken.
         return JSONResponse({"ok": True})
     if not company.strip() or not email.strip():
-        return JSONResponse({"ok": False, "error": "Firma und E-Mail sind Pflichtfelder."},
+        return JSONResponse({"ok": False, "error": "Unternehmen und E-Mail sind Pflichtfelder."},
                             status_code=422)
-    data = {"company": company, "contact": contact, "email": email, "phone": phone,
-            "website": website, "branch": branch, "interest": interest}
+    data = {"company": company, "first_name": first_name, "last_name": last_name,
+            "email": email, "website": website, "request_type": request_type,
+            "company_desc": company_desc, "anonymous": anonymous,
+            "challenge_desc": challenge_desc, "innovation": innovation,
+            "newsletter": newsletter, "association": association}
     db.add_company(data)
     mail.send_company_notification(data)
     return JSONResponse({"ok": True})
@@ -103,20 +111,43 @@ def _render_companies(companies: list[dict]) -> str:
     rows = ""
     for c in companies:
         when = _esc((c.get("created_at") or "")[:16].replace("T", " "))
-        contact_bits = " · ".join(filter(None, [_esc(c.get("contact")), _esc(c.get("branch"))]))
+        person = " ".join(filter(None, [c.get("first_name"), c.get("last_name")]))
+        anon = ' <span class="tag">anonym</span>' if (c.get("anonymous") == "Ja") else ""
+        who = f'<b>{_esc(c.get("company"))}</b>{anon}'
+        if person:
+            who += f'<br><span class="meta">{_esc(person)}</span>'
+
         links = ""
         if c.get("email"):
             links += f'<a href="mailto:{_esc(c["email"])}">{_esc(c["email"])}</a>'
-        if c.get("phone"):
-            links += f'<br><span class="meta">{_esc(c["phone"])}</span>'
         if c.get("website"):
             links += f'<br><a href="{_esc(c["website"])}" target="_blank" rel="noopener">Website ↗</a>'
+
+        parts = []
+        if c.get("request_type"):
+            parts.append(f'<div><b>Anliegen:</b> {_esc(c["request_type"])}</div>')
+        if c.get("company_desc"):
+            parts.append(f'<div><b>Unternehmen:</b> {_esc(c["company_desc"])}</div>')
+        if c.get("challenge_desc"):
+            parts.append(f'<div><b>Herausforderung:</b> {_esc(c["challenge_desc"])}</div>')
+        innov = c.get("innovation") or []
+        if innov:
+            tags = "".join(f'<span class="tag">{_esc(i)}</span>' for i in innov)
+            parts.append(f'<div class="tags">{tags}</div>')
+        meta = []
+        if c.get("newsletter"):
+            meta.append(f'Newsletter: {_esc(c["newsletter"])}')
+        if c.get("association"):
+            meta.append(_esc(c["association"]))
+        if meta:
+            parts.append(f'<div class="meta">{" · ".join(meta)}</div>')
+
         rows += f"""
         <tr>
           <td class="d">{when}</td>
-          <td><b>{_esc(c.get('company'))}</b>{f'<br><span class="meta">{contact_bits}</span>' if contact_bits else ''}</td>
+          <td>{who}</td>
           <td>{links or '—'}</td>
-          <td>{_esc(c.get('interest'))}</td>
+          <td class="details">{"".join(parts) or '—'}</td>
         </tr>"""
     return rows
 
@@ -164,6 +195,11 @@ a{{color:var(--cyan-dk)}}.act{{display:flex;gap:.5rem;white-space:nowrap}}
 .ok{{background:var(--green);color:#fff}}.no{{background:#fff;border:1px solid var(--border)!important;color:var(--muted)}}
 .empty{{text-align:center;color:var(--muted);padding:2rem}}
 .count{{color:var(--muted);font-size:.85rem}}
+.details div{{margin-bottom:.35rem;font-size:.85rem}}
+.details b{{color:var(--navy-mid)}}
+.tags{{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.2rem}}
+.tag{{font-size:.68rem;color:var(--cyan-dk);background:rgba(56,188,212,.1);
+  border:1px solid rgba(56,188,212,.3);border-radius:2rem;padding:.12rem .55rem}}
 </style></head><body>
 <h1>Forschungstermine · Admin</h1>
 <p class="sub">Termine serverseitig aktualisieren und KI-Vorschläge freigeben.</p>
