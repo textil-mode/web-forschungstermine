@@ -45,6 +45,13 @@ def init_db() -> None:
                 challenge_desc TEXT, innovation TEXT, newsletter TEXT, association TEXT,
                 created_at TEXT
             )""")
+        # Idempotente Migration: fehlende Spalten an einer älteren companies-Tabelle
+        # nachrüsten (zerstörungsfrei), damit ein bestehender Bestand erhalten bleibt.
+        have = {r[1] for r in con.execute("PRAGMA table_info(companies)")}
+        for col in ("first_name", "last_name", "request_type", "company_desc",
+                    "anonymous", "challenge_desc", "innovation", "newsletter", "association"):
+            if col not in have:
+                con.execute(f"ALTER TABLE companies ADD COLUMN {col} TEXT")
 
 
 def _to_row(ev: dict, source: str, confidence: float | None = None) -> dict:
