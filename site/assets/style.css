@@ -177,12 +177,13 @@ footer.site a:hover{color:var(--magenta)}
 .fnote.ok{color:var(--green);font-weight:600}
 .fnote.err{color:var(--magenta);font-weight:600}
 
-/* Kopfzeilen-Link */
-.topnav{display:flex;justify-content:flex-end;margin:20px 0 -8px}
-.topnav a{font-family:var(--display);font-size:.62rem;font-weight:500;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--navy-mid);text-decoration:none;border:1.5px solid var(--border-2);
-  border-radius:2rem;padding:.5rem 1.1rem;transition:all .2s}
-.topnav a:hover{border-color:var(--cyan);color:var(--cyan-dk);transform:translateY(-2px)}
+/* Hero-Button „Für Unternehmen" */
+.hero-cta{display:inline-flex;align-items:center;margin:1.8rem 0 .2rem;
+  background:var(--navy-mid);color:var(--white);padding:.8rem 1.8rem;border-radius:.3rem;
+  text-decoration:none;font-family:var(--display);font-size:.68rem;font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;cursor:none;
+  transition:transform .15s,box-shadow .15s,background .2s}
+.hero-cta:hover{background:var(--navy);transform:translateY(-2px);box-shadow:0 10px 30px rgba(15,37,64,.25)}
 
 @media(max-width:600px){
   body{cursor:auto} .cursor,.cursor-ring{display:none}
